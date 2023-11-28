@@ -4,7 +4,6 @@ require('dotenv').config()
 
 const verifyLogin = async (req, res, next) => {
     const { authorization } = req.headers;
-
     if (!authorization) {
         return res.status(401).json('Não autorizado');
     }
@@ -20,14 +19,14 @@ const verifyLogin = async (req, res, next) => {
             return res.status(404).json('Usuario não encontrado');
         }
 
-        const { senha, ...user } = login[0];
+        const { senha, ...user } = login;
 
         req.user = user;
 
         next();
 
     } catch (error) {
-        return res.status(401).json(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
     };
 };
 

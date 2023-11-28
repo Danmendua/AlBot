@@ -6,7 +6,7 @@ CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(80) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    senha TEXT NOT NULL
+    senha VARCHAR(500) NOT NULL
 );
 
 DROP TABLE IF EXISTS categorias;
