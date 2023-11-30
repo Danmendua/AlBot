@@ -26,7 +26,11 @@ const verifyLogin = async (req, res, next) => {
         next();
 
     } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        if (error instanceof jwt.JsonWebTokenError && error.name === 'JsonWebTokenError') {
+            return res.status(403).json({ mensagem: "Sem permissão" });
+        } else {
+            return res.status(500).json({ mensagem: "Erro interno do servidor" });
+        };
     };
 };
 
