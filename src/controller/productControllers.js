@@ -4,7 +4,6 @@ const registerProduct = async (req, res) => {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
 
     try {
-
         const insertProduct = await knex('produtos').insert({ descricao, quantidade_estoque, valor, categoria_id });
 
         if (!insertProduct) {
@@ -21,10 +20,10 @@ const updateProduct = async (req, res) => {
     const { id } = req.params;
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
     try {
-        const existingProduct = await knex('produtos').whereNot({ id: id }).andWhere({ descricao: descricao, valor: valor, categoria_id: categoria_id }).first();
-        if (existingProduct) {
-            const newStock = parseInt(existingProduct.quantidade_estoque) + parseInt(quantidade_estoque);
-            await knex('produtos').where({ id: existingProduct.id }).update({ quantidade_estoque: newStock });
+        const existingDoubleProduct = await knex('produtos').whereNot({ id: id }).andWhere({ descricao: descricao, valor: valor, categoria_id: categoria_id }).first();
+        if (existingDoubleProduct) {
+            const newStock = parseInt(existingDoubleProduct.quantidade_estoque) + parseInt(quantidade_estoque);
+            await knex('produtos').where({ id: existingDoubleProduct.id }).update({ quantidade_estoque: newStock });
             await knex('produtos').where({ id }).del();
             return res.status(200).json({ mensagem: 'Produto atualizado com sucesso' });
         } else {

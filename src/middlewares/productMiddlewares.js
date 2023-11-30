@@ -14,16 +14,16 @@ const findCategory = async (req, res, next) => {
 };
 
 const duplicateProduct = async (req, res, next) => {
-    const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+    const { descricao, categoria_id } = req.body;
     try {
-        const doubleProduct = await knex('produtos').where({ descricao: descricao, valor: valor, categoria_id: categoria_id });
+        const doubleProduct = await knex('produtos').where({ descricao: descricao });
 
         if (doubleProduct.length > 0) {
-            const updateProduct = await knex('produtos').where({ categoria_id: categoria_id, valor: valor }).increment({ quantidade_estoque: quantidade_estoque }).returning('*');
-            if (updateProduct) {
-                return res.status(201).json('O estoque do produto foi atualizado com sucesso.');
+            const sameProductDifferenteId = await knex('produtos').whereNot({ categoria_id: categoria_id }).andWhere({ descricao: descricao }).first();
+            if (sameProductDifferenteId) {
+                return res.status(400).json('O produto não foi cadastrado pois já existe um igual mas com categoria_id diferente.');
             } else {
-                return res.status(400).json('O produto não foi cadastrado');
+                return res.status(400).json('O produto não foi cadastrado pois já existe um igual');
             };
         };
         next();

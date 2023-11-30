@@ -31,7 +31,7 @@ DROP TABLE IF EXISTS produtos;
 
 CREATE TABLE produtos (
     id SERIAL PRIMARY KEY,
-    descricao VARCHAR(255),
+    descricao VARCHAR(255) UNIQUE,
     quantidade_estoque INT NOT NULL, 
     valor INT, 
     categoria_id INT NOT NULL REFERENCES categorias(id)

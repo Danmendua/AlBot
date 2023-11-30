@@ -14,6 +14,4 @@ const alredyExist = async (req, res, next) => {
 };
 
 
-module.exports = {
-    alredyExist
-}
+module.exports = alredyExist
