@@ -5,7 +5,7 @@ require('dotenv').config()
 const verifyLogin = async (req, res, next) => {
     const { authorization } = req.headers;
     if (!authorization) {
-        return res.status(401).json('Não autorizado');
+        return res.status(401).json({ mensagem: 'Não autorizado' });
     }
 
     const token = authorization.replace('Bearer ', '').trim();
@@ -16,7 +16,7 @@ const verifyLogin = async (req, res, next) => {
         const login = await knex('usuarios').where({ id }).first();
 
         if (!login) {
-            return res.status(404).json('Usuario não encontrado');
+            return res.status(404).json({ mensagem: 'Usuario não encontrado' });
         }
 
         const { senha, ...user } = login;

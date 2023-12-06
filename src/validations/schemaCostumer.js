@@ -38,9 +38,9 @@ const costumerSchema = joi.object({
         'string.max': 'O campo rua tem o limite máximo de {#limit} caracteres',
     }),
 
-    numero: joi.number().integer().min(0).messages({
+    numero: joi.number().integer().positive().messages({
         'number.integer': 'Apenas valores inteiros são permitidos',
-        'number.min': 'O número minimo permitido é {#limit}',
+        'number.positive': 'Valor inválido, tente um numero positivo',
         'number.base': 'Apenas numeros inteiros são permitidos',
 
     }),

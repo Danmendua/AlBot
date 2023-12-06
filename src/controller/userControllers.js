@@ -6,10 +6,10 @@ const createUser = async (req, res) => {
     const { nome, email, senha } = req.body;
     try {
         const encriptedPassword = await bcrypt.hash(senha, 10);
-        const newUser = await knex('usuarios').insert({ nome, email, senha: encriptedPassword }).returning(['nome', 'email']);
+        const newUser = await knex('usuarios').insert({ nome, email, senha: encriptedPassword }).returning(['id', 'nome', 'email']);
 
         if (!newUser) {
-            return res.status(400).json("O usuário não foi cadastrado.");
+            return res.status(400).json({ mensagem: "Usário não cadastrado" });
         };
 
         return res.status(201).json(newUser[0]);
@@ -25,13 +25,13 @@ const loginUser = async (req, res) => {
         const userFound = await knex('usuarios').where({ email }).first();
 
         if (!userFound) {
-            return res.status(400).json("O usuario não foi encontrado");
+            return res.status(400).json({ mensagem: "Usário não encontrado" });
         }
 
         const verifyPassword = await bcrypt.compare(senha, userFound.senha);
 
         if (!verifyPassword) {
-            return res.status(400).json("Email ou senha não confere");
+            return res.status(400).json({ mensagem: "O email ou senha não conferem" });
         }
 
         const token = jwt.sign({ id: userFound.id }, process.env.JWT, { expiresIn: '8h' });
@@ -66,7 +66,7 @@ const updateUser = async (req, res) => {
                 const userFound = await knex('usuarios').where({ email });
 
                 if (userFound.length > 0) {
-                    return res.status(400).json("O email já existe");
+                    return res.status(400).json({ mensagem: "O email já existe" });
                 };
             };
         };
@@ -78,10 +78,10 @@ const updateUser = async (req, res) => {
         const userUpdated = await knex('usuarios').where('id', req.user.id).update(body).returning('*');
 
         if (!userUpdated) {
-            return res.status(400).json("O usuario não foi atualizado");
+            return res.status(400).json({ mensagem: "Usuário não foi atualializado" });
         };
 
-        return res.status(200).json('Usuario foi atualizado com sucesso.');
+        return res.sendStatus(204)
     } catch (error) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     };

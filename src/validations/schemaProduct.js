@@ -7,16 +7,17 @@ const productSchema = joi.object({
         'string.min': 'Quantidade de caracteres inválido',
         'string.max': 'O campo descrição tem o limite máximo de {#limit} caracteres'
     }),
-    quantidade_estoque: joi.number().integer().required().min(0).messages({
+    quantidade_estoque: joi.number().integer().required().positive().messages({
         'any.required': 'O campo de quantidade de estoque é obrigatório',
         'number.integer': 'Apenas valores inteiros são permitidos',
-        'number.min': 'O valor minimo permitido é {#limit}',
+        'number.positive': 'Valor inválido, tente um numero positivo',
         'number.base': 'O número informado não é um valor válido',
     }),
-    valor: joi.number().integer().required().min(0).messages({
+    valor: joi.number().integer().required().positive().messages({
+        'number.unsafe': 'Valor inválido',
         'any.required': 'O campo valor é obrigatório',
         'number.integer': 'Apenas valores inteiros são permitidos',
-        'number.min': 'O valor minimo permitido é {#limit}',
+        'number.positive': 'Valor inválido, tente um numero positivo',
         'number.base': 'O número informado não é um valor válido',
     }),
     categoria_id: joi.number().integer().required().messages({

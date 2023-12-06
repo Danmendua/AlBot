@@ -1,6 +1,9 @@
 CREATE DATABASE pdv_cubos;
 
 DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS produtos;
+DROP TABLE IF EXISTS categorias;
+DROP TABLE IF EXISTS clientes;
 
 CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
@@ -8,8 +11,6 @@ CREATE TABLE usuarios (
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(500) NOT NULL
 );
-
-DROP TABLE IF EXISTS categorias;
 
 CREATE TABLE categorias (
     id SERIAL PRIMARY KEY,
@@ -27,8 +28,6 @@ INSERT INTO categorias (descricao) VALUES
 ('Bebê'),
 ('Games');
 
-DROP TABLE IF EXISTS produtos;
-
 CREATE TABLE produtos (
     id SERIAL PRIMARY KEY,
     descricao VARCHAR(255) UNIQUE,
@@ -36,8 +35,6 @@ CREATE TABLE produtos (
     valor INT, 
     categoria_id INT NOT NULL REFERENCES categorias(id)
 );
-
-DROP TABLE IF EXISTS clientes;
 
 CREATE TABLE clientes (
     id SERIAL PRIMARY KEY,

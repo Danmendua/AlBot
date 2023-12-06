@@ -5,7 +5,7 @@ const findCategory = async (req, res, next) => {
     try {
         const categoryFound = await knex('categorias').where({ id: categoria_id }).first();
         if (!categoryFound) {
-            return res.status(400).json("Categoria não encontrada");
+            return res.status(400).json({ mensagem: "Categoria não encontrada" });
         }
         next();
     } catch (error) {
@@ -14,18 +14,15 @@ const findCategory = async (req, res, next) => {
 };
 
 const duplicateProduct = async (req, res, next) => {
-    const { descricao, categoria_id } = req.body;
-    try {
-        const doubleProduct = await knex('produtos').where({ descricao: descricao });
+    const { descricao } = req.body;
 
-        if (doubleProduct.length > 0) {
-            const sameProductDifferenteId = await knex('produtos').whereNot({ categoria_id: categoria_id }).andWhere({ descricao: descricao }).first();
-            if (sameProductDifferenteId) {
-                return res.status(400).json('O produto não foi cadastrado pois já existe um igual mas com categoria_id diferente.');
-            } else {
-                return res.status(400).json('O produto não foi cadastrado pois já existe um igual');
-            };
+    try {
+        const productFound = await knex('produtos').where({ descricao });
+
+        if (productFound.length > 0) {
+            return res.status(400).json({ mensagem: 'Produto com descrição já existente' });
         };
+
         next();
     } catch (error) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" });

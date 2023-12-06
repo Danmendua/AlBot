@@ -12,28 +12,33 @@ const s3 = new aws.S3({
 });
 
 const uploadImages = async (path, buffer, mimetype) => {
+    try {
+        const file = await s3.upload({
+            Bucket: process.env.BLACKBLAZE_BUCKET,
+            Key: path,
+            Body: buffer,
+            ContentType: mimetype
 
-    const file = await s3.upload({
-        Bucket: process.env.BLACKBLAZE_BUCKET,
-        Key: path,
-        Body: buffer,
-        ContentType: mimetype
+        }).promise()
 
-    }).promise()
-
-    return {
-        url: file.Location,
-        path: file.Key
-    };
-
-
+        return {
+            url: file.Location,
+            path: file.Key
+        };
+    } catch (error) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
 };
 
 const deleteFile = async (path) => {
-    await s3.deleteObject({
-        Bucket: process.env.BLACKBLAZE_BUCKET,
-        Key: path
-    }).promise();
+    try {
+        await s3.deleteObject({
+            Bucket: process.env.BLACKBLAZE_BUCKET,
+            Key: path
+        }).promise();
+    } catch (error) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
 };
 
 module.exports = {
