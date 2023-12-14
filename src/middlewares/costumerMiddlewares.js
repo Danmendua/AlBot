@@ -49,15 +49,48 @@ const validationUpdateUser = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.log(error);
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+};
+
+const verifyCostumerId = async (req, res, next) => {
+    const { cliente_id } = req.body;
+    try {
+        const costumerFound = await knex('clientes').where({ id: cliente_id }).first();
+        if (!costumerFound) {
+            return res.status(400).json({ mensagem: 'Cliente não encontrado' });
+        };
+        req.costumer = costumerFound;
+        next();
+    } catch (error) {
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+};
+
+const checkCostumerId = async (req, res, next) => {
+    const { cliente_id } = req.query;
+    try {
+        if (!Number(cliente_id)) {
+            return res.status(400).json({ mensagem: 'Parametro ID inválido' });
+        }
+
+        const costumerFound = await knex('pedidos').where({ cliente_id }).first();
+
+        if (!costumerFound) {
+            return res.status(400).json({ mensagem: 'Pedido do cliente não encontrado' });
+        };
+
+        next();
+    } catch (error) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 };
 
 
-
 module.exports = {
     cpfEmailAlredyExist,
     findCostumerById,
-    validationUpdateUser
+    validationUpdateUser,
+    verifyCostumerId,
+    checkCostumerId
 }

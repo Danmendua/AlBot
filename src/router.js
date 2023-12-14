@@ -15,6 +15,7 @@ const { userBodySchema,
     updateUserSchema } = require('./validations/schemaUser');
 const productSchema = require('./validations/schemaProduct');
 const clientSchema = require('./validations/schemaCostumer');
+const orderBodySchema = require('./validations/schemaOrder');
 
 
 const { createUser,
@@ -29,7 +30,8 @@ const { registerProduct,
 
 const { findCategory,
     duplicateProduct,
-    findProductById } = require('./middlewares/productMiddlewares');
+    findProductById,
+    notAllowToDelete } = require('./middlewares/productMiddlewares');
 
 
 const { registerCostumer,
@@ -39,7 +41,12 @@ const { registerCostumer,
 
 const { cpfEmailAlredyExist,
     findCostumerById,
-    validationUpdateUser } = require('./middlewares/costumerMiddlewares');
+    validationUpdateUser,
+    verifyCostumerId,
+    checkCostumerId } = require('./middlewares/costumerMiddlewares');
+
+const { verifyProducts } = require('./middlewares/oderMiddlewares');
+const { registerOrder, listOrders } = require('./controller/orderControllers');
 
 
 
@@ -57,12 +64,14 @@ router.get('/produto', listProducts)
 router.post('/produto', bodyReqValidation(productSchema), findCategory, duplicateProduct, registerProduct);
 router.get('/produto/:id', isNanVerify, findProductById, listProductById);
 router.put('/produto/:id', isNanVerify, bodyReqValidation(productSchema), findProductById, findCategory, updateProduct);
-router.delete('/produto/:id', isNanVerify, findProductById, deleteProduct);
+router.delete('/produto/:id', isNanVerify, findProductById, notAllowToDelete, deleteProduct);
 
 router.post('/cliente', bodyReqValidation(clientSchema), cpfEmailAlredyExist, registerCostumer);
 router.put('/cliente/:id', isNanVerify, bodyReqValidation(clientSchema), findCostumerById, validationUpdateUser, editCostumer);
 router.get('/cliente', listCostumers);
 router.get('/cliente/:id', isNanVerify, listCostumersById);
 
+router.post('/pedido', bodyReqValidation(orderBodySchema), verifyCostumerId, verifyProducts, registerOrder);
+router.get('/pedido', checkCostumerId, listOrders);
 
 module.exports = router;

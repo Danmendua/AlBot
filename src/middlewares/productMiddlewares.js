@@ -26,7 +26,7 @@ const duplicateProduct = async (req, res, next) => {
         next();
     } catch (error) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
-    }
+    };
 };
 
 const findProductById = async (req, res, next) => {
@@ -34,17 +34,31 @@ const findProductById = async (req, res, next) => {
     try {
         const productFound = await knex('produtos').where({ id }).first()
         if (!productFound) {
-            return res.status(404).json({ mensagem: 'Produto não encontrado' })
+            return res.status(404).json({ mensagem: 'Produto não encontrado' });
         };
         req.product = productFound;
         next();
     } catch (error) {
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
+    };
+};
+
+const notAllowToDelete = async (req, res, next) => {
+    const { id } = req.params
+    try {
+        const productFound = await knex('pedido_produtos').where({ produto_id: id }).first();
+        if (productFound) {
+            return res.status(400).json({ mensagem: "O produto não pode ser removido porque está associado a um ou mais pedidos." });
+        }
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
-}
+};
 
 module.exports = {
     findCategory,
     duplicateProduct,
-    findProductById
+    findProductById,
+    notAllowToDelete
 }

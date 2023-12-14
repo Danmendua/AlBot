@@ -3,12 +3,84 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Confirmação de Compra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            background-color: #f3f3f3;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+            text-align: center;
+            color: #191919;
+        }
+
+        h1 {
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            background: rgba(190, 190, 190, 0.173);
+            border-bottom: 2px solid #ddd;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(24, 24, 24, 0.354);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <h1>Confirmação de Compra</h1>
+        <p>Obrigado por sua compra, {{userName}}!</p>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>Itens</th>
+                    <th>Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{purchasedItems}}</td>
+                    <td>{{totalItems}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Agradecemos por escolher nossa loja! Seu pedido está em processamento e logo será enviado.</p>
+
+        <p>Qualquer dúvida, entre em contato conosco.</p>
+
+        <div class="thank-you">
+            <b>Obrigado pela preferência!</b>
+        </div>
+    </div>
 </body>
 
 </html>
