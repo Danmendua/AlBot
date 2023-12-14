@@ -11,37 +11,32 @@ const s3 = new aws.S3({
     }
 });
 
-const uploadImages = async (path, buffer, mimetype) => {
-    try {
-        const file = await s3.upload({
-            Bucket: process.env.BLACKBLAZE_BUCKET,
-            Key: path,
-            Body: buffer,
-            ContentType: mimetype
+const uploadFile = async (path, buffer, mimetype) => {
 
-        }).promise()
+    const file = await s3.upload({
+        Bucket: process.env.KEY_NAME,
+        Key: path,
+        Body: buffer,
+        ContentType: mimetype
 
-        return {
-            url: file.Location,
-            path: file.Key
-        };
-    } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
-    }
+    }).promise();
+
+    return {
+        url: file.Location,
+        path: file.Key
+    };
+
 };
 
-const deleteFile = async (path) => {
-    try {
-        await s3.deleteObject({
-            Bucket: process.env.BLACKBLAZE_BUCKET,
-            Key: path
-        }).promise();
-    } catch (error) {
-        return res.status(500).json({ mensagem: "Erro interno do servidor" });
-    }
+const deletArchives = async (path) => {
+    await s3.deleteObject({
+        Bucket: process.env.KEY_NAME,
+        Key: path
+    }).promise();
 };
+
 
 module.exports = {
-    uploadImages,
-    deleteFile
-}
+    uploadFile,
+    deletArchives,
+};

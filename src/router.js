@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express();
 router.use(express.json());
+const multer = require('./services/multer');
+const allowUploadFile = multer.single('produto_imagem');
 
 const verifyLogin = require('./middlewares/authorization');
 const alredyExist = require('./middlewares/userMiddlewares');
@@ -61,9 +63,9 @@ router.get('/usuario', identifyUser);
 router.put('/usuario', bodyReqValidation(updateUserSchema), updateUser);
 
 router.get('/produto', listProducts)
-router.post('/produto', bodyReqValidation(productSchema), findCategory, duplicateProduct, registerProduct);
+router.post('/produto', allowUploadFile, bodyReqValidation(productSchema), findCategory, duplicateProduct, registerProduct);
 router.get('/produto/:id', isNanVerify, findProductById, listProductById);
-router.put('/produto/:id', isNanVerify, bodyReqValidation(productSchema), findProductById, findCategory, updateProduct);
+router.put('/produto/:id', allowUploadFile, isNanVerify, bodyReqValidation(productSchema), findProductById, findCategory, updateProduct);
 router.delete('/produto/:id', isNanVerify, findProductById, notAllowToDelete, deleteProduct);
 
 router.post('/cliente', bodyReqValidation(clientSchema), cpfEmailAlredyExist, registerCostumer);

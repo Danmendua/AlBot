@@ -50,8 +50,8 @@ const notAllowToDelete = async (req, res, next) => {
         if (productFound) {
             return res.status(400).json({ mensagem: "O produto não pode ser removido porque está associado a um ou mais pedidos." });
         }
+        next();
     } catch (error) {
-        console.log(error.message);
         return res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
 };
